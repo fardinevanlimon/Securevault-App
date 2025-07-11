@@ -112,6 +112,34 @@ function loadPasswords() {
   });
 }
 
+// ✅ Reset Master Key Logic with Input Clear
+function resetVault() {
+  const confirmReset = confirm("⚠️ Are you sure you want to reset everything?\nThis will delete your master key and all saved data.");
+  if (!confirmReset) return;
+
+  // Remove vault data
+  localStorage.removeItem('vault_master_key');
+  localStorage.removeItem('secure_notes');
+  localStorage.removeItem('secure_passwords');
+
+  // Clear input fields
+  document.getElementById('masterKeyInput').value = '';
+  document.getElementById('newMasterKey').value = '';
+  document.getElementById('noteTitle').value = '';
+  document.getElementById('noteContent').value = '';
+  document.getElementById('site').value = '';
+  document.getElementById('username').value = '';
+  document.getElementById('password').value = '';
+
+  // Reset UI
+  document.getElementById('loginError').classList.add('hidden');
+  document.getElementById('loginSection').classList.add('hidden');
+  document.getElementById('mainApp').classList.add('hidden');
+  document.getElementById('setupSection').classList.remove('hidden');
+
+  alert("✅ Vault has been reset. Please set a new master key.");
+}
+
 window.onload = function () {
   if (localStorage.getItem('vault_master_key')) {
     document.getElementById('setupSection').classList.add('hidden');
