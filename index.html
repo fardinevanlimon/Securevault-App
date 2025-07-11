@@ -22,7 +22,11 @@
         <p class="mb-2 font-medium text-white">Enter your master key:</p>
         <input type="password" id="masterKeyInput" class="w-full p-3 rounded bg-white text-black mb-2">
         <p id="loginError" class="text-red-400 text-sm hidden">❌ Wrong master key. Try again.</p>
-        <button onclick="unlockVault()" class="gradient-btn text-white px-4 py-3 rounded hover:opacity-90 w-full mt-2">Unlock</button>
+<div class="flex flex-col space-y-2 mt-2">
+  <button onclick="unlockVault()" class="gradient-btn text-white px-4 py-3 rounded hover:opacity-90 w-full">Unlock</button>
+  <button onclick="resetVault()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 w-full">⚠️ Reset Master Key</button>
+</div>
+      
       </div>
 
       <div id="mainApp" class="hidden">
