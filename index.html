@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SecureVault - Encrypted Vault</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="max-w-4xl mx-auto py-10 px-6">
+    <div class="glass rounded-2xl p-8">
+      <h1 class="text-4xl font-extrabold text-center text-white mb-8 text-glow">🔐 SecureVault</h1>
+
+      <div id="setupSection">
+        <p class="mb-2 font-medium text-white">Create a new master key:</p>
+        <input type="password" id="newMasterKey" class="w-full p-3 rounded bg-white text-black mb-4">
+        <button onclick="setNewMasterKey()" class="gradient-btn text-white px-4 py-3 rounded hover:opacity-90 w-full">Set Master Key</button>
+      </div>
+
+      <div id="loginSection" class="hidden">
+        <p class="mb-2 font-medium text-white">Enter your master key:</p>
+        <input type="password" id="masterKeyInput" class="w-full p-3 rounded bg-white text-black mb-2">
+        <p id="loginError" class="text-red-400 text-sm hidden">❌ Wrong master key. Try again.</p>
+        <button onclick="unlockVault()" class="gradient-btn text-white px-4 py-3 rounded hover:opacity-90 w-full mt-2">Unlock</button>
+      </div>
+
+      <div id="mainApp" class="hidden">
+        <div class="flex space-x-4 mt-6 mb-4">
+          <button onclick="switchTab('notes')" class="tab-btn bg-blue-900 hover:bg-blue-800 px-4 py-2 rounded text-white">📝 Notes</button>
+          <button onclick="switchTab('passwords')" class="tab-btn bg-blue-900 hover:bg-blue-800 px-4 py-2 rounded text-white">🔐 Passwords</button>
+        </div>
+
+        <div id="notesTab">
+          <h2 class="text-2xl font-semibold mb-2">Add Note</h2>
+          <input type="text" id="noteTitle" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Note Title">
+          <textarea id="noteContent" rows="4" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Write your note..."></textarea>
+          <button onclick="addNote()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Save Note</button>
+
+          <h3 class="text-xl font-semibold mt-6 mb-2">Your Notes</h3>
+          <div id="notesList" class="space-y-3"></div>
+        </div>
+
+        <div id="passwordsTab" class="hidden">
+          <h2 class="text-2xl font-semibold mb-2">Add Password</h2>
+          <input type="text" id="site" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Site Name">
+          <input type="text" id="username" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Username">
+          <input type="text" id="password" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Password">
+          <button onclick="addPassword()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Save Password</button>
+
+          <h3 class="text-xl font-semibold mt-6 mb-2">Your Passwords</h3>
+          <div id="passwordsList" class="space-y-3"></div>
+        </div>
+
+        <button onclick="logout()" class="mt-6 w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">🔒 Lock Vault</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
