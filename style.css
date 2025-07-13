@@ -1,17 +1,28 @@
+
 body {
+  font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
   color: #fff;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
+
 .glass {
   backdrop-filter: blur(20px);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
+
 .text-glow {
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
+
 .gradient-btn {
   background: linear-gradient(to right, #ff512f, #dd2476);
+}
+
+.hidden {
+  display: none;
 }
