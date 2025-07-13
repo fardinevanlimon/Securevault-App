@@ -1,5 +1,7 @@
 let masterKey = '';
 
+// =================== Master Key Logic ===================
+
 function setNewMasterKey() {
   const newKey = document.getElementById('newMasterKey').value;
   if (!newKey) return alert("Please enter a master key");
@@ -32,12 +34,54 @@ function logout() {
   document.getElementById('loginSection').classList.remove('hidden');
 }
 
-function switchTab(tab) {
-  document.getElementById('notesTab').classList.add('hidden');
-  document.getElementById('passwordsTab').classList.add('hidden');
-  if (tab === 'notes') document.getElementById('notesTab').classList.remove('hidden');
-  else document.getElementById('passwordsTab').classList.remove('hidden');
+function resetVault() {
+  const confirmReset = confirm("⚠️ Are you sure you want to reset everything?\nThis will delete your master key and all saved data.");
+  if (!confirmReset) return;
+
+  localStorage.removeItem('vault_master_key');
+  localStorage.removeItem('secure_notes');
+  localStorage.removeItem('secure_passwords');
+
+  document.getElementById('masterKeyInput').value = '';
+  document.getElementById('newMasterKey').value = '';
+  document.getElementById('noteTitle').value = '';
+  document.getElementById('noteContent').value = '';
+  document.getElementById('site').value = '';
+  document.getElementById('username').value = '';
+  document.getElementById('password').value = '';
+
+  document.getElementById('loginError').classList.add('hidden');
+  document.getElementById('loginSection').classList.add('hidden');
+  document.getElementById('mainApp').classList.add('hidden');
+  document.getElementById('setupSection').classList.remove('hidden');
+
+  alert("✅ Vault has been reset. Please set a new master key.");
 }
+
+window.onload = function () {
+  if (localStorage.getItem('vault_master_key')) {
+    document.getElementById('setupSection').classList.add('hidden');
+    document.getElementById('loginSection').classList.remove('hidden');
+  }
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const msg = urlParams.get('msg');
+  if (msg) {
+    switchTab('loveletter');
+    switchMode('decrypt');
+    document.getElementById('encryptedText').value = msg;
+  }
+};
+
+// =================== Tab Switching ===================
+
+function switchTab(tab) {
+  const tabs = ['notesTab', 'passwordsTab', 'loveletterTab'];
+  tabs.forEach(id => document.getElementById(id).classList.add('hidden'));
+  document.getElementById(tab + 'Tab').classList.remove('hidden');
+}
+
+// =================== AES Utility ===================
 
 function encryptAES(data, key) {
   return CryptoJS.AES.encrypt(data, key).toString();
@@ -51,6 +95,8 @@ function decryptAES(data, key) {
     return '';
   }
 }
+
+// =================== Notes ===================
 
 function addNote() {
   const title = document.getElementById('noteTitle').value;
@@ -80,6 +126,8 @@ function loadNotes() {
     }
   });
 }
+
+// =================== Passwords ===================
 
 function addPassword() {
   const site = document.getElementById('site').value;
@@ -112,37 +160,62 @@ function loadPasswords() {
   });
 }
 
-// ✅ Reset Master Key Logic with Input Clear
-function resetVault() {
-  const confirmReset = confirm("⚠️ Are you sure you want to reset everything?\nThis will delete your master key and all saved data.");
-  if (!confirmReset) return;
+// =================== Love Letter Encryptor ===================
 
-  // Remove vault data
-  localStorage.removeItem('vault_master_key');
-  localStorage.removeItem('secure_notes');
-  localStorage.removeItem('secure_passwords');
+function switchMode(mode) {
+  document.getElementById('encryptBox').classList.add('hidden');
+  document.getElementById('decryptBox').classList.add('hidden');
+  document.getElementById('outputLinkBox').classList.add('hidden');
+  document.getElementById('decryptedOutput').classList.add('hidden');
 
-  // Clear input fields
-  document.getElementById('masterKeyInput').value = '';
-  document.getElementById('newMasterKey').value = '';
-  document.getElementById('noteTitle').value = '';
-  document.getElementById('noteContent').value = '';
-  document.getElementById('site').value = '';
-  document.getElementById('username').value = '';
-  document.getElementById('password').value = '';
-
-  // Reset UI
-  document.getElementById('loginError').classList.add('hidden');
-  document.getElementById('loginSection').classList.add('hidden');
-  document.getElementById('mainApp').classList.add('hidden');
-  document.getElementById('setupSection').classList.remove('hidden');
-
-  alert("✅ Vault has been reset. Please set a new master key.");
+  if (mode === 'encrypt') {
+    document.getElementById('encryptBox').classList.remove('hidden');
+  } else {
+    document.getElementById('decryptBox').classList.remove('hidden');
+  }
 }
 
-window.onload = function () {
-  if (localStorage.getItem('vault_master_key')) {
-    document.getElementById('setupSection').classList.add('hidden');
-    document.getElementById('loginSection').classList.remove('hidden');
+function encryptMessage() {
+  const message = document.getElementById('message').value;
+  const passphrase = document.getElementById('passphrase').value;
+
+  if (!message || !passphrase) {
+    alert("Please enter both message and passphrase.");
+    return;
   }
-};
+
+  const ciphertext = CryptoJS.AES.encrypt(message, passphrase).toString();
+  const shareableURL = `${location.origin}${location.pathname}?msg=${encodeURIComponent(ciphertext)}`;
+
+  document.getElementById('shareableLink').value = shareableURL;
+  document.getElementById('outputLinkBox').classList.remove('hidden');
+}
+
+function copyLink() {
+  const link = document.getElementById('shareableLink');
+  link.select();
+  document.execCommand('copy');
+  alert("Link copied to clipboard!");
+}
+
+function decryptMessage() {
+  const encryptedText = document.getElementById('encryptedText').value;
+  const passphrase = document.getElementById('decryptPassphrase').value;
+
+  if (!encryptedText || !passphrase) {
+    alert("Please enter both encrypted text and passphrase.");
+    return;
+  }
+
+  try {
+    const bytes = CryptoJS.AES.decrypt(encryptedText, passphrase);
+    const originalText = bytes.toString(CryptoJS.enc.Utf8);
+
+    if (!originalText) throw new Error("Invalid decryption.");
+
+    document.getElementById('decryptedOutput').innerText = "💌 Decrypted Letter:\n\n" + originalText;
+    document.getElementById('decryptedOutput').classList.remove('hidden');
+  } catch (e) {
+    alert("Decryption failed. Check your passphrase or ciphertext.");
+  }
+}
