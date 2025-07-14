@@ -1,101 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>SecureVault 💖</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <meta charset="UTF-8" />
+    <title>SecureVault 💖</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css" />
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
-  <div class="max-w-4xl mx-auto py-10 px-6">
-    <div class="glass rounded-2xl p-8">
-      <h1 class="text-4xl font-extrabold text-center text-white mb-8 text-glow">🔐 SecureVault </h1>
 
-      <!-- Setup Section -->
-      <div id="setupSection">
-        <p class="mb-2 font-medium text-white">Create a new master key:</p>
-        <input type="password" id="newMasterKey" class="w-full p-3 rounded bg-white text-black mb-4">
-        <button onclick="setNewMasterKey()" class="gradient-btn text-white px-4 py-3 rounded hover:opacity-90 w-full">Set Master Key</button>
-      </div>
-
-      <!-- Login Section -->
-      <div id="loginSection" class="hidden">
-        <p class="mb-2 font-medium text-white">Enter your master key:</p>
-        <input type="password" id="masterKeyInput" class="w-full p-3 rounded bg-white text-black mb-2">
-        <p id="loginError" class="text-red-400 text-sm hidden">❌ Wrong master key. Try again.</p>
-        <div class="flex flex-col space-y-2 mt-2">
-          <button onclick="unlockVault()" class="gradient-btn text-white px-4 py-3 rounded hover:opacity-90 w-full">Unlock</button>
-          <button onclick="resetVault()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 w-full">⚠️ Reset Master Key</button>
-        </div>
-      </div>
-
-      <!-- Main App -->
-      <div id="mainApp" class="hidden">
-        <div class="flex flex-wrap gap-2 mt-6 mb-4">
-          <button onclick="switchTab('notes')" class="tab-btn bg-blue-900 hover:bg-blue-800 px-4 py-2 rounded text-white">📝 Notes</button>
-          <button onclick="switchTab('passwords')" class="tab-btn bg-blue-900 hover:bg-blue-800 px-4 py-2 rounded text-white">🔐 Passwords</button>
-          <button onclick="switchTab('loveletter')" class="tab-btn bg-pink-600 hover:bg-pink-500 px-4 py-2 rounded text-white">💌 Letter Encryptor</button>
-        </div>
-
-        <!-- Notes Tab -->
-        <div id="notesTab">
-          <h2 class="text-2xl font-semibold mb-2">Add Note</h2>
-          <input type="text" id="noteTitle" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Note Title">
-          <textarea id="noteContent" rows="4" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Write your note..."></textarea>
-          <button onclick="addNote()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Save Note</button>
-
-          <h3 class="text-xl font-semibold mt-6 mb-2">Your Notes</h3>
-          <div id="notesList" class="space-y-3"></div>
-        </div>
-
-        <!-- Passwords Tab -->
-        <div id="passwordsTab" class="hidden">
-          <h2 class="text-2xl font-semibold mb-2">Add Password</h2>
-          <input type="text" id="site" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Site Name">
-          <input type="text" id="username" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Username">
-          <input type="text" id="password" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Password">
-          <button onclick="addPassword()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Save Password</button>
-
-          <h3 class="text-xl font-semibold mt-6 mb-2">Your Passwords</h3>
-          <div id="passwordsList" class="space-y-3"></div>
-        </div>
-
-        <!-- Love Letter Tab -->
-        <div id="loveletterTab" class="hidden">
-          <h2 class="text-2xl font-semibold mb-4 text-white">💌 AES Love Letter Encryptor</h2>
-
-          <div class="flex gap-4 mb-4">
-            <button onclick="switchMode('encrypt')" class="bg-pink-500 hover:bg-pink-400 px-3 py-1 rounded text-white">🔒 Encrypt</button>
-            <button onclick="switchMode('decrypt')" class="bg-pink-500 hover:bg-pink-400 px-3 py-1 rounded text-white">🔓 Decrypt</button>
-          </div>
-
-          <div id="encryptBox">
-            <textarea id="message" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Write your love letter..."></textarea>
-            <input type="password" id="passphrase" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Enter passphrase"/>
-            <button onclick="encryptMessage()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Generate Link</button>
-            <div id="outputLinkBox" class="hidden mt-4">
-              <p class="text-white">🔗 Link:</p>
-              <input type="text" id="shareableLink" readonly class="w-full p-2 rounded bg-white text-black mb-2"/>
-              <button onclick="copyLink()" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Copy</button>
-            </div>
-          </div>
-
-          <div id="decryptBox" class="hidden">
-            <textarea id="encryptedText" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Paste encrypted text..."></textarea>
-            <input type="password" id="decryptPassphrase" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Enter passphrase"/>
-            <button onclick="decryptMessage()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Decrypt</button>
-            <div id="decryptedOutput" class="hidden mt-4 text-white bg-white bg-opacity-10 p-3 rounded"></div>
-          </div>
-        </div>
-
-        <!-- Lock Vault -->
-        <button onclick="logout()" class="mt-6 w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">🔒 Lock Vault</button>
-      </div>
+    <div class="page-header-logo">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCAyMDAgNDAiPgo8cGF0aCBkPSJNMTUgMEMxMC4yIDAgNi41IDQuMSAzLjkgOC41TDIwIDQwTDM2LjEgOC41QzMzLjUgNC4xIDI5LjggMCAyNSA1QzIwIDUgMTYgMCAxNSAwWiIgZmlsbD0iI2ZmZiIvPgo8cGF0aCBkPSJNMTUgMEMxMy40IDAgMTAuOSA0LjQgMTAuOSA0LjRMMjAgNDBMMjkuMSA0LjRDMjkuMSA0LjQgMjYuNiAwIDE1IDBaIiBmaWxsPSIjM2I4MmY2Ii8+Cjx0ZXh0IHg9IjUwIiB5PSIyOCIgZm9udC1mYW1pbHk9IlBvcHBpbnMsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiNmZmZmZmYiPlNlY3VyZVZhdWx0PC90ZXh0Pgo8L3N2Zz4=" alt="SecureVault Logo">
     </div>
-  </div>
 
-  <script src="script.js"></script>
+    <div class="main-container">
+
+        <div class="panel left-panel">
+            <div class="intro-text">
+                <h1 class="text-4xl font-bold">Secure your data today for peace of mind tomorrow.</h1>
+                <p class="mt-4 text-gray-300">Set your master key and keep your information as secure as possible using cutting-edge technology and strict security protocols.</p>
+            </div>
+
+            <div class="app-wrapper">
+                <div id="setupSection">
+                    <div class="form-logo"><h2 class="text-2xl font-bold text-white text-glow">🔐 SecureVault</h2></div>
+                    <p class="mb-2 font-medium">Create a new master key:</p>
+                    <input type="password" id="newMasterKey" class="w-full p-3 rounded bg-white text-black mb-4">
+                    <button onclick="setNewMasterKey()" class="gradient-btn text-white px-4 py-3 rounded hover:opacity-90 w-full">Set Master Key</button>
+                </div>
+
+                <div id="loginSection" class="hidden">
+                     <div class="form-logo"><h2 class="text-2xl font-bold text-white text-glow">🔐 SecureVault</h2></div>
+                    <p class="mb-2 font-medium">Enter your master key:</p>
+                    <input type="password" id="masterKeyInput" class="w-full p-3 rounded bg-white text-black mb-2">
+                    <p id="loginError" class="text-red-400 text-sm hidden">❌ Wrong master key. Try again.</p>
+                    <div class="flex flex-col space-y-2 mt-2">
+                        <button onclick="unlockVault()" class="gradient-btn text-white px-4 py-3 rounded hover:opacity-90 w-full">Unlock</button>
+                        <button onclick="resetVault()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 w-full">⚠️ Reset Master Key</button>
+                    </div>
+                </div>
+
+                <div id="mainApp" class="hidden w-full">
+                    <div class="flex flex-wrap gap-2 mb-4 justify-center">
+                        <button onclick="switchTab('notes')" class="tab-btn bg-blue-900 hover:bg-blue-800 px-4 py-2 rounded text-white">📝 Notes</button>
+                        <button onclick="switchTab('passwords')" class="tab-btn bg-blue-900 hover:bg-blue-800 px-4 py-2 rounded text-white">🔐 Passwords</button>
+                        <button onclick="switchTab('loveletter')" class="tab-btn bg-pink-600 hover:bg-pink-500 px-4 py-2 rounded text-white">💌 Letter Encryptor</button>
+                    </div>
+
+                    <div id="notesTab" class="text-left">
+                        <h2 class="text-2xl font-semibold mb-2">Add Note</h2>
+                        <input type="text" id="noteTitle" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Note Title">
+                        <textarea id="noteContent" rows="4" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Write your note..."></textarea>
+                        <button onclick="addNote()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Save Note</button>
+                    </div>
+                    
+                    <div id="passwordsTab" class="hidden text-left">
+                        <h2 class="text-2xl font-semibold mb-2">Add Password</h2>
+                        <input type="text" id="site" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Site Name">
+                        <input type="text" id="username" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Username">
+                        <input type="text" id="password" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Password">
+                        <button onclick="addPassword()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Save Password</button>
+                    </div>
+
+                    <div id="loveletterTab" class="hidden text-left">
+                        <h2 class="text-2xl font-semibold mb-4 text-white text-center">💌 AES Love Letter Encryptor</h2>
+                        <div class="flex gap-4 mb-4 justify-center">
+                            <button onclick="switchMode('encrypt')" class="bg-pink-500 hover:bg-pink-400 px-3 py-1 rounded text-white">🔒 Encrypt</button>
+                            <button onclick="switchMode('decrypt')" class="bg-pink-500 hover:bg-pink-400 px-3 py-1 rounded text-white">🔓 Decrypt</button>
+                        </div>
+                        <div id="encryptBox">
+                            <textarea id="message" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Write your love letter..."></textarea>
+                            <input type="password" id="passphrase" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Enter passphrase"/>
+                            <button onclick="encryptMessage()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Generate Link</button>
+                            <div id="outputLinkBox" class="hidden mt-4">
+                                <p class="text-white">🔗 Link:</p>
+                                <input type="text" id="shareableLink" readonly class="w-full p-2 rounded bg-white text-black mb-2"/>
+                                <button onclick="copyLink()" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Copy</button>
+                            </div>
+                        </div>
+                        <div id="decryptBox" class="hidden">
+                            <textarea id="encryptedText" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Paste encrypted text..."></textarea>
+                            <input type="password" id="decryptPassphrase" class="w-full p-3 rounded bg-white text-black mb-2" placeholder="Enter passphrase"/>
+                            <button onclick="decryptMessage()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Decrypt</button>
+                        </div>
+                    </div>
+
+                   <button onclick="logout()" class="mt-6 w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 font-bold">🔒 Lock Vault</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel right-panel">
+            <div class="header-logo">
+                <i class="fas fa-shield-alt"></i> SecureVault
+            </div>
+            <p class="data-safe-text">Your data is safe</p>
+
+            <div id="rightPanelContent" class="w-full">
+                <div id="notesListContainer" class="hidden">
+                    <h3 class="text-xl font-semibold mb-2">Your Notes</h3>
+                    <div id="notesList" class="space-y-3"></div>
+                </div>
+                <div id="passwordsListContainer" class="hidden">
+                    <h3 class="text-xl font-semibold mb-2">Your Passwords</h3>
+                    <div id="passwordsList" class="space-y-3"></div>
+                </div>
+                <div id="decryptedLetterContainer" class="hidden">
+                    <div id="decryptedOutput" class="whitespace-pre-wrap mt-4 text-white bg-white bg-opacity-10 p-3 rounded"></div>
+                </div>
+                <div id="rightPanelStaticContent">
+                    <div class="illustration"></div>
+                    <div class="share-card">
+                        <h3>Share with Friends</h3>
+                        <p>Tell your friends about the data protection platform</p>
+                        <button class="btn-share" onclick="shareApp()">Share</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
