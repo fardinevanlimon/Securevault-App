@@ -29,7 +29,6 @@ body {
     display: none;
 }
 
-/* CSS FOR THE TOP-LEFT LOGO */
 .page-header-logo {
     position: absolute;
     top: 40px;
@@ -46,7 +45,7 @@ body {
     gap: 2rem;
     width: 100%;
     max-width: 1100px;
-    align-items: flex-start; /* Aligns panels to the top */
+    align-items: flex-start;
 }
 
 .panel {
@@ -72,7 +71,7 @@ body {
 
 .app-wrapper {
     text-align: left;
-    margin-top: auto; /* Pushes the form section to the bottom */
+    margin-top: auto;
 }
 
 .form-logo {
@@ -87,7 +86,6 @@ body {
 .gradient-btn {
     background-image: var(--button-gradient);
     transition: transform 0.2s, box-shadow 0.2s;
-    font-weight: 600;
 }
 .gradient-btn:hover {
     transform: translateY(-2px);
@@ -158,28 +156,57 @@ body {
     box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
 }
 
-/* Responsive Design */
+
+/* =================== RESPONSIVE DESIGN =================== */
+
+/* For Tablets */
 @media (max-width: 992px) {
+    body {
+        align-items: flex-start;
+        padding-top: 6rem;
+    }
     .main-container {
         flex-direction: column;
+        align-items: center; 
+        gap: 1.5rem;
     }
     .left-panel, .right-panel {
         flex-basis: 100%;
-    }
-    /* Make most buttons bold like the share button */
-.left-panel button {
-  font-weight: 600;
-}
-
-/* Keep the reset button font normal, not bold */
-.left-panel button.bg-yellow-500 {
-  font-weight: 500;
-}
-    .intro-text h1 {
-        font-size: 1.8rem;
+        width: 100%;
+        max-width: 600px;
     }
     .page-header-logo {
-        top: 20px;
-        left: 20px;
+        top: 2rem;
+        left: 2rem;
+    }
+}
+
+/* For Mobile Phones */
+@media (max-width: 768px) {
+    /* Change body to normal block flow for mobile */
+    body {
+        display: block;
+        padding: 2rem 1rem;
+    }
+
+    /* Make the logo static and center it */
+    .page-header-logo {
+        position: static;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .main-container {
+        padding-top: 0;
+        width: 100%;
+    }
+    
+    .panel {
+        padding: 1.5rem;
+    }
+    
+    .intro-text h1 {
+        font-size: 1.6rem;
+        line-height: 1.3;
     }
 }
